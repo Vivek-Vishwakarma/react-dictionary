@@ -1,14 +1,16 @@
-import { TextField } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+
 import React, { useState } from "react";
 import "../App.css";
+import { HiSearch }from "react-icons/hi"
 const Dictionary = () => {
   const [search, setSearch] = useState("");
   const [meaning, setMeaning] = useState([]);
   const [audio, setAudio] = useState("");
   const [mean, setMean] = useState("");
+  const [loading, setLoading] = useState(false)
   const fetchData = async (e) => {
     e.preventDefault();
+    setLoading(true)
     const fetchMeaning = await fetch(
       `https://api.dictionaryapi.dev/api/v2/entries/en/${search}`
     );
@@ -16,32 +18,22 @@ const Dictionary = () => {
     setMeaning(data[0]);
     setAudio(data[0].phonetics);
     setMean(data[0].meanings);
-    console.log(audio);
+    setLoading(false)
   };
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
   return (
     <>
       <form className="container" onSubmit={fetchData}>
-        <TextField
-          id="standard-basic"
-          fullWidth
-          label="Search ..."
-          variant="standard"
+        <input
           onChange={(e) => setSearch(e.target.value)}
+          className="input"
+          placeholder="Search ..."
         />
-        <SearchIcon
+        <HiSearch
+        className="icon"
           onClick={fetchData}
-          sx={{
-            fontSize: 30,
-            marginLeft: "5px",
-            marginTop: "5px",
-            cursor: "pointer",
-          }}
+          alt="search icon"
         />
       </form>
-
       <h2 className="word">Word : {meaning && meaning.word}</h2>
       <p className="audio">
         Pronouncation :{" "}
@@ -55,6 +47,7 @@ const Dictionary = () => {
           })}{" "}
       </p>
       <div className="meaning">
+    {loading && <h4>Searching ....</h4>}
         {mean &&
           mean.map((element) => {
             return (
@@ -72,7 +65,6 @@ const Dictionary = () => {
                     </ul>
                   );
                 })}
-                <hr />
                 <br />
               </>
             );
