@@ -19,10 +19,10 @@ const Dictionary = () => {
       setMeaning(data[0]);
       setAudio(data[0].phonetics);
       setMean(data[0].meanings);
-      console.log(audio);
       setLoading(false);
     } catch (error) {
-      alert("Not found !!");
+      alert(`Not found !! Click on ok to google the meaning of ${search}`);
+      window.open(`https://www.google.com/search?q=${search}+meaning`, '_blank')
     }
   };
   return (
@@ -37,7 +37,7 @@ const Dictionary = () => {
         />
         <datalist id="words">
           {Words.map((e)=>{
-            return (<option value={e}/>)
+            return (<option key={e} value={e}/>)
           })}
         </datalist>
         <HiSearch className="icon" onClick={fetchData} alt="search icon" />
@@ -59,7 +59,7 @@ const Dictionary = () => {
         {mean &&
           mean.map((element) => {
             return (
-              <>
+              <div key={element.partOfSpeech}>
                 <h3>Part of Speech : {element.partOfSpeech}</h3>
                 {element.definitions.map((e) => {
                   return (
@@ -74,7 +74,7 @@ const Dictionary = () => {
                   );
                 })}
                 <br />
-              </>
+              </div>
             );
           })}{" "}
       </div>
